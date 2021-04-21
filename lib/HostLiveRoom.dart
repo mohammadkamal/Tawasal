@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:tawasal/AppSettings.dart';
 import 'package:tawasal/LiveRoom.dart';
 import 'package:tawasal/LiveRoomsList.dart';
-import 'package:tawasal/RtcTokenGenerator.dart';
 
 class HostLiveRoom extends StatefulWidget {
-  final String roomID;
+  final LiveRoom liveRoom;
 
-  HostLiveRoom({this.roomID});
+  HostLiveRoom({this.liveRoom});
 
   @override
   _HostLiveRoomState createState() => _HostLiveRoomState();
@@ -22,8 +21,6 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
   bool muted = false;
   RtcEngine _engine;
   RtcEngineConfig _engineConfig;
-  LiveRoom _tempRoom;
-  String token;
 
   @override
   void initState() {
@@ -50,9 +47,8 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
 
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-    token =
-        await RtcTokenGenerator.getAgoraToken(widget.roomID, 1129022635, 86400);
-    await _engine.joinChannel(token, widget.roomID, null, 1129022635);
+    await _engine.joinChannel(widget.liveRoom.roomToken,
+        widget.liveRoom.roomName, null, widget.liveRoom.hostNumber);
     //List<TranscodingUser> _transcodingusers = <TranscodingUser>[];
     //LiveTranscoding _liveTranscoding=LiveTranscoding(_transcodingusers);
     //await _engine.setLiveTranscoding(_liveTranscoding);
@@ -65,7 +61,6 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
     await _engine.startPreview();
     //await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     //await _engine.setClientRole(ClientRole.Broadcaster);
-    _tempRoom = context.read<LiveRoomsList>().roomsMap[widget.roomID];
   }
 
   void _addAgoraEventHandlers() {
@@ -79,9 +74,6 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
         final info = 'joinChannelSuccess: $channel, uid: $uid';
         _infoStrings.add(info);
         //Add host uid to firebase
-        _tempRoom = new LiveRoom(
-            roomName: widget.roomID, hostNumber: uid, roomToken: token);
-        context.read<LiveRoomsList>().update(widget.roomID, _tempRoom);
       });
     }, leaveChannel: (stats) {
       setState(() {
@@ -207,8 +199,8 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
 
   /// Stop live streaming
   void _onCallEnd(BuildContext context) {
-    context.read<LiveRoomsList>().removeRoom(widget.roomID);
-    Navigator.pop(context);
+    context.read<LiveRoomsList>().removeRoom(widget.liveRoom.roomName);
+    Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   /// Mute
@@ -226,7 +218,7 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.roomID)),
+      appBar: AppBar(title: Text(widget.liveRoom.roomName)),
       backgroundColor: Colors.black,
       body: Center(
         child: Stack(

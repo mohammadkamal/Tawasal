@@ -1,18 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:tawasal/ContactsList.dart';
 import 'package:tawasal/HostLiveRoom.dart';
 import 'package:tawasal/LiveRoom.dart';
 import 'package:tawasal/LiveRoomsList.dart';
+import 'package:tawasal/RtcTokenGenerator.dart';
 
-class CreateRoom extends StatefulWidget {
+class CreateLiveVideoRoom extends StatefulWidget {
   @override
-  _CreateRoomState createState() => _CreateRoomState();
+  _CreateLiveVideoRoomState createState() => _CreateLiveVideoRoomState();
 }
 
-class _CreateRoomState extends State<CreateRoom> {
+class _CreateLiveVideoRoomState extends State<CreateLiveVideoRoom> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _roomNameCtrl = TextEditingController();
+  int _userPhone;
+  String _token;
+  LiveRoom _liveRoom;
 
   Widget _roomNameLabel() {
     return Container(
@@ -56,14 +62,24 @@ class _CreateRoomState extends State<CreateRoom> {
     if (_formKey.currentState.validate()) {
       await _handleCameraAndMic(Permission.camera);
       await _handleCameraAndMic(Permission.microphone);
-      context
-          .read<LiveRoomsList>()
-          .addRoom(new LiveRoom(roomName: _roomNameCtrl.text));
+
+      _userPhone = await context.read<ContactsList>().getLocalNumberByUID(FirebaseAuth.instance.currentUser.uid);
+
+      _token = await RtcTokenGenerator.getAgoraToken(
+          _roomNameCtrl.text, _userPhone, 86400);
+
+      _liveRoom = LiveRoom(
+          roomName: _roomNameCtrl.text,
+          hostNumber: _userPhone,
+          roomToken: _token);
+
+      context.read<LiveRoomsList>().addRoom(_liveRoom);
       await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        HostLiveRoom(roomID: _roomNameCtrl.text)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => HostLiveRoom(
+                    liveRoom: _liveRoom,
+                  )));
     }
   }
 
@@ -89,7 +105,7 @@ class _CreateRoomState extends State<CreateRoom> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Room'),
+        title: Text('Create Live Video Room'),
       ),
       body: _mainForm(),
     );

@@ -54,8 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 });
             // ignore: unused_local_variable
-            var result =
-                await _login().whenComplete(() => Navigator.pop(context));
+            var result = await _login()
+                .whenComplete(() => Navigator.pop(context))
+                .then((value) => Navigator.pushNamed(context, '/'));
           }
         },
         child: Text('Login'),
@@ -73,7 +74,12 @@ class _LoginPageState extends State<LoginPage> {
           verificationFailed: (FirebaseAuthException e) {
             print(e.message);
           },
-          codeSent: (String verificationId, int resendToken) async {},
+          codeSent: (String verificationId, int resendToken) async {
+            String smsCode = '236545';
+            PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                verificationId: verificationId, smsCode: smsCode);
+            await FirebaseAuth.instance.signInWithCredential(credential);
+          },
           codeAutoRetrievalTimeout: (String verificationId) {});
     } on FirebaseAuthException catch (e) {
       String msg = '';

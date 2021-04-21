@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/GuestLiveRoom.dart';
+import 'package:tawasal/ContactsList.dart';
 import 'package:tawasal/LiveRoomsList.dart';
-import 'package:tawasal/OneToOneCall.dart';
+import 'package:tawasal/LoginPage.dart';
+import 'package:tawasal/RoomsList.dart';
 import 'package:tawasal/SplashScreen.dart';
 
 void main() {
-  runApp(MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => LiveRoomsList())],
-      child: Tawasal()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => LiveRoomsList()),
+    ChangeNotifierProvider(create: (context) => ContactsList())
+  ], child: Tawasal()));
 }
 
 class Tawasal extends StatefulWidget {
@@ -29,7 +32,10 @@ class _TawasalState extends State<Tawasal> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(home: RoomsList());
+          return MaterialApp(
+              home: FirebaseAuth.instance.currentUser == null
+                  ? LoginPage()
+                  : RoomsList());
         } else {
           return MaterialApp(
             title: 'Tawasal',
@@ -37,58 +43,6 @@ class _TawasalState extends State<Tawasal> {
           );
         }
       },
-    );
-  }
-}
-
-class RoomsList extends StatefulWidget {
-  _RoomsListState createState() => _RoomsListState();
-}
-
-class _RoomsListState extends State<RoomsList> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<LiveRoomsList>().fetchData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Tawasal'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        child: Icon(Icons.add),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Text('Not signed in'),
-              decoration: BoxDecoration(color: Colors.blue),
-            ),
-            ListTile(
-                title: Text('Direct call'),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OneToOneCall()));
-                })
-          ],
-        ),
-      ),
-      body: ListView(
-        children: Provider.of<LiveRoomsList>(context).roomsMap.isNotEmpty
-            ? Provider.of<LiveRoomsList>(context).roomsMap.keys.map((e) {
-                return ListTile(
-                  title: Text(e),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => GuestLiveRoom(roomID: e))),
-                );
-              }).toList()
-            : [],
-      ),
     );
   }
 }
