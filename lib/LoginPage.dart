@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tawasal/InitialProfileSettings.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -56,7 +57,10 @@ class _LoginPageState extends State<LoginPage> {
             // ignore: unused_local_variable
             var result = await _login()
                 .whenComplete(() => Navigator.pop(context))
-                .then((value) => Navigator.pushNamed(context, '/'));
+                .then((value) => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => InitialProfileSettings())));
           }
         },
         child: Text('Login'),

@@ -22,7 +22,8 @@ class _CreateLiveVideoRoomState extends State<CreateLiveVideoRoom> {
 
   Widget _roomNameLabel() {
     return Container(
-      padding: EdgeInsets.only(bottom: 10),
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(right: 10, left: 10, top: 10),
       child: Text(
         'Room name',
         softWrap: true,
@@ -36,8 +37,10 @@ class _CreateLiveVideoRoomState extends State<CreateLiveVideoRoom> {
       child: TextFormField(
         controller: _roomNameCtrl,
         decoration: InputDecoration(
-            border: null, labelText: 'Enter the name of the room'),
-        autofocus: true,
+            border: OutlineInputBorder(borderSide: BorderSide(width: 7)),
+            labelText: 'Enter the name of the room',
+            hintText: 'Class'),
+        autofocus: false,
         validator: (value) {
           if (value.isEmpty) {
             return 'This field is required';
@@ -58,28 +61,93 @@ class _CreateLiveVideoRoomState extends State<CreateLiveVideoRoom> {
     );
   }
 
+  Widget _overwriteDialog() {
+    return AlertDialog(
+      title: Text('Warning'),
+      content: SingleChildScrollView(
+          child: ListBody(
+        children: [Text('Do you want to override the room?')],
+      )),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel')),
+        TextButton(
+            onPressed: () async {
+              _token = await RtcTokenGenerator.getAgoraToken(
+                  _roomNameCtrl.text, _userPhone, 86400);
+              _liveRoom = LiveRoom(
+                  roomName: _roomNameCtrl.text,
+                  hostNumber: _userPhone,
+                  roomToken: _token);
+              context
+                  .read<LiveRoomsList>()
+                  .update(_roomNameCtrl.text, _liveRoom);
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HostLiveRoom(
+                            liveRoom: _liveRoom,
+                          )));
+            },
+            child: Text('Confirm'))
+      ],
+    );
+  }
+
+  Widget _byAnotherUser() {
+    return AlertDialog(
+      title: Text('Error'),
+      content: Text(
+        'This room is created by another user! Please choose another name!',
+        softWrap: true,
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: Text('Ok'))
+      ],
+    );
+  }
+
   Future<void> _onCreate() async {
     if (_formKey.currentState.validate()) {
       await _handleCameraAndMic(Permission.camera);
       await _handleCameraAndMic(Permission.microphone);
 
-      _userPhone = await context.read<ContactsList>().getLocalNumberByUID(FirebaseAuth.instance.currentUser.uid);
+      _userPhone = await context
+          .read<ContactsList>()
+          .getLocalNumberByUID(FirebaseAuth.instance.currentUser.uid);
 
-      _token = await RtcTokenGenerator.getAgoraToken(
-          _roomNameCtrl.text, _userPhone, 86400);
+      if (context
+          .read<LiveRoomsList>()
+          .roomsMap
+          .containsKey(_roomNameCtrl.text)) {
+        if (context
+                .read<LiveRoomsList>()
+                .roomsMap[_roomNameCtrl.text]
+                .hostNumber ==
+            _userPhone) {
+          showDialog(
+              context: context, builder: (context) => _overwriteDialog());
+        } else {
+          showDialog(context: context, builder: (context) => _byAnotherUser());
+        }
+      } else {
+        _token = await RtcTokenGenerator.getAgoraToken(
+            _roomNameCtrl.text, _userPhone, 86400);
 
-      _liveRoom = LiveRoom(
-          roomName: _roomNameCtrl.text,
-          hostNumber: _userPhone,
-          roomToken: _token);
+        _liveRoom = LiveRoom(
+            roomName: _roomNameCtrl.text,
+            hostNumber: _userPhone,
+            roomToken: _token);
 
-      context.read<LiveRoomsList>().addRoom(_liveRoom);
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HostLiveRoom(
-                    liveRoom: _liveRoom,
-                  )));
+        context.read<LiveRoomsList>().addRoom(_liveRoom);
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HostLiveRoom(
+                      liveRoom: _liveRoom,
+                    )));
+      }
     }
   }
 

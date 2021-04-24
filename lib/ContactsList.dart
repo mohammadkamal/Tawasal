@@ -37,7 +37,16 @@ class ContactsList extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateDisplayName(String uid, String displayName) {
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      await contactsDatabase.doc(uid).update({'displayName': displayName});
+      var _newContact = await contactsDatabase.doc(uid).get();
+      _contactsMap[uid] = ContactAccount.fromJson(_newContact.data());
+    });
+  }
+
   Future<void> fetchData() async {
+    _contactsMap.clear();
     QuerySnapshot querySnapshot = await contactsDatabase.get();
     var list = querySnapshot.docs;
     list.forEach((element) {

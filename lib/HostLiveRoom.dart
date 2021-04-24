@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tawasal/AppSettings.dart';
 import 'package:tawasal/LiveRoom.dart';
 import 'package:tawasal/LiveRoomsList.dart';
+import 'package:tawasal/RoomsList.dart';
 
 class HostLiveRoom extends StatefulWidget {
   final LiveRoom liveRoom;
@@ -26,13 +27,6 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
   void initState() {
     super.initState();
     initialize();
-  }
-
-  void dipose() {
-    _users.clear();
-    _engine.leaveChannel();
-    _engine.destroy();
-    super.dispose();
   }
 
   Future<void> initialize() async {
@@ -200,7 +194,10 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
   /// Stop live streaming
   void _onCallEnd(BuildContext context) {
     context.read<LiveRoomsList>().removeRoom(widget.liveRoom.roomName);
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    _users.clear();
+    _engine.leaveChannel();
+    _engine.destroy();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RoomsList()));
   }
 
   /// Mute

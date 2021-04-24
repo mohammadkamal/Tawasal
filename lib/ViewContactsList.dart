@@ -13,25 +13,24 @@ class _ViewContactsListState extends State<ViewContactsList> {
     context.read<ContactsList>().fetchData();
   }
 
-  Widget _callWaitingDialog() {
+  Widget _callWaitingDialog(String _name) {
     return AlertDialog(
-      content: ListView(
-        shrinkWrap: true,
-        children: [
-          Row(
+      title: Text('Calling...'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [CircularProgressIndicator()],
-              mainAxisAlignment: MainAxisAlignment.center),
-          GestureDetector(
-            child: Container(
-              alignment: Alignment.bottomRight,
-              child: Text('Cancel'),
             ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
+            Text('Calling ' + _name)
+          ],
+        ),
       ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context), child: Text('Cancel'))
+      ],
     );
   }
 
@@ -49,7 +48,12 @@ class _ViewContactsListState extends State<ViewContactsList> {
                   trailing: IconButton(
                       icon: Icon(Icons.call),
                       onPressed: () {
-                        showDialog(context: context, builder: (context) =>_callWaitingDialog());
+                        showDialog(
+                            context: context,
+                            builder: (context) => _callWaitingDialog(
+                                Provider.of<ContactsList>(context)
+                                    .contactsMap[e]
+                                    .displayName));
                       }),
                 );
               }).toList()
