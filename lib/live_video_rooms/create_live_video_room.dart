@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/ContactsList.dart';
-import 'package:tawasal/HostLiveRoom.dart';
-import 'package:tawasal/LiveRoom.dart';
-import 'package:tawasal/LiveRoomsList.dart';
-import 'package:tawasal/RtcTokenGenerator.dart';
+import 'package:tawasal/contact_accounts/contacts_list.dart';
+import 'package:tawasal/live_room.dart';
+import 'package:tawasal/live_rooms_list.dart';
+import 'package:tawasal/live_video_rooms/host_live_room.dart';
+import 'package:tawasal/utilities/rtc_token_generator.dart';
 
 class CreateLiveVideoRoom extends StatefulWidget {
   @override

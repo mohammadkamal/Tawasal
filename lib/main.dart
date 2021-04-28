@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/ContactsList.dart';
-import 'package:tawasal/LiveRoomsList.dart';
-import 'package:tawasal/LoginPage.dart';
-import 'package:tawasal/RoomsList.dart';
-import 'package:tawasal/SplashScreen.dart';
+import 'package:tawasal/contact_accounts/contacts_list.dart';
+import 'package:tawasal/contact_accounts/login_page.dart';
+import 'package:tawasal/live_rooms_list.dart';
+import 'package:tawasal/rooms_list.dart';
+import 'package:tawasal/splash_screen.dart';
 
 void main() {
   runApp(MultiProvider(providers: [

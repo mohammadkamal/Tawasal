@@ -1,11 +1,11 @@
-import 'package:tawasal/AppSettings.dart';
-import 'package:tawasal/PrivateDualCall.dart';
-import 'package:tawasal/RtcTokenGenerator.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:tawasal/app_settings.dart';
+import 'package:tawasal/private_dual_calls/private_dual_call.dart';
+import 'package:tawasal/utilities/rtc_token_generator.dart';
 
 class OneToOneCall extends StatefulWidget {
   OneToOneCall({this.privateDualCall});

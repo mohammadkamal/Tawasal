@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/ContactAccount.dart';
-import 'package:tawasal/ContactsList.dart';
-import 'package:tawasal/RoomsList.dart';
+import 'package:tawasal/contact_accounts/contact_account.dart';
+import 'package:tawasal/contact_accounts/contacts_list.dart';
+import 'package:tawasal/rooms_list.dart';
 
 class InitialProfileSettings extends StatefulWidget {
   @override

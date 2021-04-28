@@ -2,10 +2,10 @@ import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/AppSettings.dart';
-import 'package:tawasal/LiveRoom.dart';
-import 'package:tawasal/LiveRoomsList.dart';
-import 'package:tawasal/RoomsList.dart';
+import 'package:tawasal/app_settings.dart';
+import 'package:tawasal/live_room.dart';
+import 'package:tawasal/live_rooms_list.dart';
+import 'package:tawasal/rooms_list.dart';
 
 class HostLiveRoom extends StatefulWidget {
   final LiveRoom liveRoom;
@@ -197,7 +197,8 @@ class _HostLiveRoomState extends State<HostLiveRoom> {
     _users.clear();
     _engine.leaveChannel();
     _engine.destroy();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RoomsList()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => RoomsList()));
   }
 
   /// Mute

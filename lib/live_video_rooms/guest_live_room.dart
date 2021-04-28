@@ -1,10 +1,10 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
-import 'package:tawasal/AppSettings.dart';
-import 'package:tawasal/LiveRoomsList.dart';
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:tawasal/LiveRoom.dart';
 import 'package:provider/provider.dart';
+import 'package:tawasal/app_settings.dart';
+import 'package:tawasal/live_room.dart';
+import 'package:tawasal/live_rooms_list.dart';
 
 class GuestLiveRoom extends StatefulWidget {
   final String roomID;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tawasal/InitialProfileSettings.dart';
+import 'package:tawasal/contact_accounts/initial_profile_settings.dart';
 
 class LoginPage extends StatefulWidget {
   @override

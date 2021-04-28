@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tawasal/EditContactAccount.dart';
-import 'package:tawasal/ViewContactsList.dart';
+import 'package:tawasal/contact_accounts/edit_contact_account.dart';
+import 'package:tawasal/contact_accounts/view_contacts_list.dart';
 
 class AppSideDrawer extends StatefulWidget {
   @override

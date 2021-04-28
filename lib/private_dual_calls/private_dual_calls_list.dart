@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tawasal/PrivateDualCall.dart';
+import 'package:tawasal/private_dual_calls/private_dual_call.dart';
 
 class PrivateDualCallsList extends ChangeNotifier {
   Map<String, PrivateDualCall> _callsMap = new Map<String, PrivateDualCall>();

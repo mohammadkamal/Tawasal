@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tawasal/LiveRoom.dart';
+import 'package:tawasal/live_room.dart';
 
 class LiveRoomsList extends ChangeNotifier {
   CollectionReference roomList =

@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tawasal/ContactAccount.dart';
+import 'package:tawasal/contact_accounts/contact_account.dart';
 
 class ContactsList extends ChangeNotifier {
   Map<String, ContactAccount> _contactsMap = new Map<String, ContactAccount>();

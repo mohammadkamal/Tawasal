@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tawasal/ContactsList.dart';
+import 'package:tawasal/contact_accounts/contacts_list.dart';
 
 class ViewContactsList extends StatefulWidget {
   @override

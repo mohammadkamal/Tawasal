@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tawasal/CreateLiveVideoRoom.dart';
+import 'package:tawasal/live_video_rooms/create_live_video_room.dart';
 
 class CreateRoomPage extends StatefulWidget {
   @override

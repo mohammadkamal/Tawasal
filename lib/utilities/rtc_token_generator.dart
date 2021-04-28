@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:tawasal/AppSettings.dart';
+import 'package:tawasal/app_settings.dart';
 
 class RtcTokenGenerator {
   static const platform = const MethodChannel('samples.flutter.dev/agora');
